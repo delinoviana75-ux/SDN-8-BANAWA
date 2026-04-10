@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Belajar - SDN 8 Banawa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-blue-50 font-sans">
+
+    <header class="bg-blue-600 text-white shadow-lg p-6">
+        <div class="container mx-auto text-center">
+            <h1 class="text-3xl font-bold">📚 Portal Belajar Kelas 4</h1>
+            <p class="mt-2 text-blue-100">SDN 8 Banawa - Belajar Kapan Saja, Di Mana Saja</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-semibold text-gray-700">Daftar Materi Terbaru</h2>
+            <button onclick="fetchData()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition">
+                <i class="fas fa-sync-alt"></i> Refresh Data
+            </button>
+        </div>
+
+        <div id="materi-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <p class="text-center col-span-full text-gray-500 italic">Memuat materi, harap tunggu...</p>
+        </div>
+    </main>
+
+    <footer class="text-center py-6 text-gray-500 text-sm">
+        &copy; 2026 SDN 8 Banawa. Dibuat dengan ❤️ untuk Pendidikan.
+    </footer>
+
+    <script>
+        // GANTI URL INI dengan URL Web App dari Google Apps Script kamu
+        const API_URL = "URL_WEB_APP_ANDA_DI_SINI";
+
+        async function fetchData() {
+            const container = document.getElementById('materi-container');
+            
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                
+                container.innerHTML = ""; // Kosongkan loading text
+
+                data.forEach(item => {
+                    const card = `
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+                            <div class="p-1 bg-blue-400"></div>
+                            <div class="p-6">
+                                <span class="text-xs font-bold uppercase px-2 py-1 bg-blue-100 text-blue-600 rounded-full">
+                                    ${item.mapel}
+                                </span>
+                                <h3 class="mt-3 text-xl font-bold text-gray-800">${item.judul}</h3>
+                                <p class="mt-2 text-gray-600 text-sm line-clamp-2">${item.deskripsi}</p>
+                                <a href="${item.link}" target="_blank" 
+                                   class="mt-4 inline-block w-full text-center bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-700 transition">
+                                    Buka Materi <i class="fas fa-external-link-alt ml-1 text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            } catch (error) {
+                container.innerHTML = `<p class="text-red-500 col-span-full text-center">Gagal memuat data. Pastikan URL API benar dan sudah di-deploy.</p>`;
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        // Panggil fungsi saat halaman dibuka
+        fetchData();
+    </script>
+</body>
+</html>
